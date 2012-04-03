@@ -20,7 +20,12 @@ Constants for CompareValueType : IMGCOMP_PSNR, IMGCOMP_SNR, IMGCOMP_SSIM
 Constants for Output : IMGCOMP_PICNOTEQUAL, IMGCOMP_FILE1FAIL, IMGCOMP_FILE2FAIL
 
 Compile with: 
-g++ -I/usr/include/opencv -lopencv_core -lopencv_highgui -lopencv_ml -lm main.cpp
+$ g++ -I/usr/include/opencv -lopencv_core -lopencv_highgui -lopencv_ml -lm main.cpp -fopenmp -o imgcomp
+(based on Fedora 16 Linux. For other distribution please specify correct include directory for openCV)
 
-Example:
-(coming soon)
+Example (command line usage) :
+$ imgcomp lena_color_512.tif lenna_noisy_50.jpg
+
+Example (function usage) :
+imgcomp("lena_color_512.tif", "lenna_noisy_50.jpg", IMGCOMP_PSNR)
+will return command for PSNR of two pictures.
