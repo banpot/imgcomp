@@ -55,9 +55,9 @@ for (int y = 0; y < img.rows; ++y) {
 	for (int x = 0; x < img.cols; ++x)
 	{
 		vec3b = img(y, x);
-		r1[y][x] = int( vec3b[0]);
-		g1[y][x] = int( vec3b[1]);
-		b1[y][x] = int( vec3b[2]);
+		r1[y][x] = double( vec3b[0]);
+		g1[y][x] = double( vec3b[1]);
+		b1[y][x] = double( vec3b[2]);
 	}
 }
 
@@ -86,24 +86,23 @@ for (int y = 0; y < img2.rows; ++y) {
 	for (int x = 0; x < img2.cols; ++x)
 	{
 		vec3b = img2(y, x);
-		r2[y][x] = int( vec3b[0]);
-		g2[y][x] = int( vec3b[1]);
-		b2[y][x] = int( vec3b[2]);
+		r2[y][x] = double( vec3b[0]);
+		g2[y][x] = double( vec3b[1]);
+		b2[y][x] = double( vec3b[2]);
 	}
 }
-
 
 // start computation
 for (int i=0;i<height;i++){
 for (int j=0;j<width;j++){
-mse+=pow(r1[i][j] - r2[i][j],2);
-mse+=pow(g1[i][j] - g2[i][j],2);
-mse+=pow(b1[i][j] - b2[i][j],2);
+mse+=(r1[i][j] - r2[i][j])*(r1[i][j] - r2[i][j]);
+mse+=(g1[i][j] - g2[i][j])*(g1[i][j] - g2[i][j]);
+mse+=(b1[i][j] - b2[i][j])*(b1[i][j] - b2[i][j]);
 }
 }
 
 mse/=(3*width*height);
-psnr = 10 * log(255*255/mse);
+psnr = 20 * log(255) - 10*log(mse);
 if (CompareValueType==IMGCOMP_PSNR) {return (psnr);}
 if (CompareValueType==IMGCOMP_MSE) {return (mse);}
 
