@@ -9,6 +9,7 @@
 #define IMGCOMP_PSNR 	1
 #define IMGCOMP_SNR 	2
 #define IMGCOMP_SSIM 	3
+#define IMGCOMP_MSE 	4
 
 #define IMGCOMP_PICNOTEQUAL 	-1
 #define IMGCOMP_FILE1FAIL 	-2
@@ -20,6 +21,7 @@ double **b1;
 double **r2;
 double **g2;
 double **b2;
+double mse, psnr, snr;
 cv::Vec3b vec3b;
 int height,width,height2,width2; 
 
@@ -27,16 +29,17 @@ int height,width,height2,width2;
 float imgcomp(char* filename1, char* filename2, int CompareValueType){
 
 // Debug
-printf("Filename 1: %s\nFilename 2: %s\n", filename1, filename2);
+//printf("Filename 1: %s\nFilename 2: %s\n", filename1, filename2);
 
 // Fetching filename 1
 
 cv::Mat_<cv::Vec3b> img = cv::imread(filename1, 1);
-printf("Data size is (#cols, #rows) = (%d, %d)\n", img.cols, img.rows);
+//printf("Data size is (#cols, #rows) = (%d, %d)\n", img.cols, img.rows);
 //cv::Mat_<int> labels(width * height, 1);
 width = img.cols;
 height = img.rows;
 
+// 2D array allocation for image #1
 r1 = (double**)malloc(height*sizeof(double *));
 g1 = (double**)malloc(height*sizeof(double *));
 b1 = (double**)malloc(height*sizeof(double *));
@@ -60,10 +63,11 @@ for (int y = 0; y < img.rows; ++y) {
 
 
 cv::Mat_<cv::Vec3b> img2 = cv::imread(filename2, 1);
-printf("Data size is (#cols, #rows) = (%d, %d)\n", img2.cols, img2.rows);
+//printf("Data size is (#cols, #rows) = (%d, %d)\n", img2.cols, img2.rows);
 width2 = img2.cols;
 height2 = img2.rows;
 
+// 2D array allocation for image #2
 r2 = (double**)malloc(height*sizeof(double *));
 g2 = (double**)malloc(height*sizeof(double *));
 b2 = (double**)malloc(height*sizeof(double *));
@@ -89,5 +93,18 @@ for (int y = 0; y < img2.rows; ++y) {
 }
 
 
+// start computation
+for (int i=0;i<height;i++){
+for (int j=0;j<width;j++){
+mse+=pow(r1[i][j] - r2[i][j],2);
+mse+=pow(g1[i][j] - g2[i][j],2);
+mse+=pow(b1[i][j] - b2[i][j],2);
+}
+}
+
+mse/=(3*width*height);
+psnr = 10 * log(255*255/mse);
+if (CompareValueType==IMGCOMP_PSNR) {return (psnr);}
+if (CompareValueType==IMGCOMP_MSE) {return (mse);}
 
 } // End function
