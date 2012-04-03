@@ -81,8 +81,9 @@ b2[i] = (double*)malloc(height*sizeof(double));
 // Image not equal = exit
 if (width!=width2 || height!=height2) {printf("\nTwo images is not in equal size.\n");return(IMGCOMP_PICNOTEQUAL);}
 
-
-for (int y = 0; y < img2.rows; ++y) {
+int y;
+#pragma omp parallel for 
+for (y = 0; y < img2.rows; ++y) {
 	for (int x = 0; x < img2.cols; ++x)
 	{
 		vec3b = img2(y, x);

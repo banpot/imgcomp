@@ -9,8 +9,10 @@
 #define IMGCOMP_FILE1FAIL 	-2
 #define IMGCOMP_FILE2FAIL 	-3
 
-int main(int argc, char* argv[]){
+#define THREADNUM 16
 
+int main(int argc, char* argv[]){
+omp_set_num_threads(THREADNUM);
 if (argc < 2) {printf("use format:\nimgcomp filename1 filename2 [compare type]\n");exit(0);}
 
 printf("PSNR : %f\n", imgcomp(argv[1], argv[2], IMGCOMP_PSNR));
